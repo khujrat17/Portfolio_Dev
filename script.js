@@ -39,13 +39,13 @@ window.addEventListener('resize', resizeCanvas);
 
 function drawGrid() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
+
     const gridSize = 50;
     const lineWidth = 0.5;
-    
+
     ctx.strokeStyle = 'rgba(0, 212, 255, 0.1)';
     ctx.lineWidth = lineWidth;
-    
+
     // Draw vertical lines
     for (let x = 0; x <= canvas.width; x += gridSize) {
         ctx.beginPath();
@@ -53,7 +53,7 @@ function drawGrid() {
         ctx.lineTo(x, canvas.height);
         ctx.stroke();
     }
-    
+
     // Draw horizontal lines
     for (let y = 0; y <= canvas.height; y += gridSize) {
         ctx.beginPath();
@@ -112,7 +112,7 @@ function animateCounter(element) {
     const duration = 2000;
     const increment = target / (duration / 16);
     let current = 0;
-    
+
     const updateCounter = () => {
         current += increment;
         if (current < target) {
@@ -122,7 +122,7 @@ function animateCounter(element) {
             element.textContent = target.toLocaleString();
         }
     };
-    
+
     updateCounter();
 }
 
@@ -137,14 +137,14 @@ const sectionObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('visible');
-            
+
             // Animate counters in hero section
             if (entry.target.classList.contains('hero')) {
                 document.querySelectorAll('.stat-number').forEach(counter => {
                     animateCounter(counter);
                 });
             }
-            
+
             // Animate skill bars
             if (entry.target.classList.contains('skills')) {
                 animateSkills();
@@ -178,47 +178,41 @@ document.querySelectorAll('.project-card, .package-card').forEach(card => {
     cardObserver.observe(card);
 });
 
-// Observer for timeline items
-const timelineObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry, index) => {
-        if (entry.isIntersecting) {
-            setTimeout(() => {
-                entry.target.classList.add('visible');
-            }, index * 200);
+// ===== TAB FUNCTIONALITY FOR EXPERIENCE & EDUCATION =====
+const tabButtons = document.querySelectorAll('.tab-btn');
+const tabPanes = document.querySelectorAll('.tab-pane');
+
+tabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        // Remove active class from all buttons and panes
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabPanes.forEach(pane => {
+            pane.classList.remove('show', 'active');
+        });
+
+        // Add active class to clicked button
+        button.classList.add('active');
+
+        // Show corresponding tab pane
+        const targetTab = button.getAttribute('data-tab');
+        const targetPane = document.getElementById(targetTab);
+        if (targetPane) {
+            targetPane.classList.add('show', 'active');
         }
     });
-}, observerOptions);
-
-// Observe timeline items
-document.querySelectorAll('.timeline-item').forEach(item => {
-    timelineObserver.observe(item);
 });
 
-// Observer for education cards
-const educationObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry, index) => {
-        if (entry.isIntersecting) {
-            setTimeout(() => {
-                entry.target.classList.add('visible');
-            }, index * 200);
-        }
-    });
-}, observerOptions);
 
-// Observe education cards
-document.querySelectorAll('.education-card').forEach(card => {
-    educationObserver.observe(card);
-});
 
 // ===== SKILL BARS ANIMATION =====
 function animateSkills() {
     const skillItems = document.querySelectorAll('.skill-item');
-    
+
     skillItems.forEach((item, index) => {
         setTimeout(() => {
             item.style.opacity = '1';
             item.style.transform = 'translateX(0)';
-            
+
             const progress = item.querySelector('.skill-progress');
             const level = item.getAttribute('data-level');
             progress.style.width = level + '%';
@@ -231,25 +225,25 @@ const contactForm = document.getElementById('contactForm');
 
 contactForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    
+
     const formData = {
         name: document.getElementById('name').value,
         email: document.getElementById('email').value,
         subject: document.getElementById('subject').value,
         message: document.getElementById('message').value
     };
-    
+
     // Create mailto link
     const mailtoLink = `mailto:khujratshaikh1284@gmail.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(
         `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
     )}`;
-    
+
     // Open email client
     window.location.href = mailtoLink;
-    
+
     // Show success message
     alert('Thank you for your message! Your email client will open shortly.');
-    
+
     // Reset form
     contactForm.reset();
 });
@@ -272,13 +266,13 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 document.addEventListener('mousemove', (e) => {
     const mouseX = e.clientX / window.innerWidth;
     const mouseY = e.clientY / window.innerHeight;
-    
+
     // Parallax for stars
-    document.querySelector('.stars').style.transform = 
+    document.querySelector('.stars').style.transform =
         `translate(${mouseX * 20}px, ${mouseY * 20}px)`;
-    document.querySelector('.stars2').style.transform = 
+    document.querySelector('.stars2').style.transform =
         `translate(${mouseX * 30}px, ${mouseY * 30}px)`;
-    document.querySelector('.stars3').style.transform = 
+    document.querySelector('.stars3').style.transform =
         `translate(${mouseX * 40}px, ${mouseY * 40}px)`;
 });
 
@@ -357,7 +351,7 @@ glitchElements.forEach(element => {
     element.addEventListener('mouseenter', () => {
         element.style.animation = 'glitch 0.3s ease';
     });
-    
+
     element.addEventListener('animationend', () => {
         element.style.animation = '';
     });
